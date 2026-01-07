@@ -1,4 +1,4 @@
-package com.ferdsapp.pokemonapp.ui.theme
+package com.ferdsapp.pokemonapp.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
