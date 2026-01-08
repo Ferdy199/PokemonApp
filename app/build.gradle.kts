@@ -21,7 +21,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "API_KEY", "4b0d44ea-dc83-4845-a860-f68bf63d419e")
     }
 
     buildTypes {
@@ -43,6 +42,9 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    hilt {
+        enableAggregatingTask = false
     }
 }
 

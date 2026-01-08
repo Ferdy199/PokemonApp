@@ -16,7 +16,12 @@ class RemoteDataSource @Inject constructor (private val apiService: ApiService):
         return flow {
             try {
                 val apiResponse = apiService.getElementType()
-                emit(ApiResponse.Success(apiResponse))
+                if (!apiResponse.data.isNullOrEmpty()){
+                    emit(ApiResponse.Success(apiResponse))
+                }else{
+                    emit(ApiResponse.Error("Failed Get Api"))
+                }
+
             }catch (e: Exception){
                 emit(ApiResponse.Error(e.message.toString()))
             }

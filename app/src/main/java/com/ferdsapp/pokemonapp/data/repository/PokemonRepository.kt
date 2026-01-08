@@ -1,5 +1,6 @@
 package com.ferdsapp.pokemonapp.data.repository
 
+import com.dicoding.jetreward.ui.common.UiState
 import com.ferdsapp.pokemonapp.data.source.IRemoteDataSource
 import com.ferdsapp.pokemonapp.data.utils.ApiResponse
 import com.ferdsapp.pokemonapp.data.utils.DataMapper
@@ -12,25 +13,25 @@ import javax.inject.Singleton
 
 @Singleton
 class PokemonRepository @Inject constructor (private val pokemonDataSource: IRemoteDataSource): IPokemonRepository {
-    override suspend fun getElementType(): Flow<ApiResponse<ElementTypeEntity>> {
+    override suspend fun getElementType(): Flow<UiState<ElementTypeEntity>> {
        return flow {
            try {
                pokemonDataSource.getElementType().collect { apiResponse ->
                    when(apiResponse) {
                        is ApiResponse.Error -> {
-                           emit(ApiResponse.Error(apiResponse.message))
+                           emit(UiState.Error(apiResponse.message.toString()))
                        }
                        is ApiResponse.Loading -> {
-                           emit(ApiResponse.Loading)
+                           emit(UiState.Loading)
                        }
                        is ApiResponse.Success -> {
                            val getElementResponse = DataMapper.mapElementTypeResponsesToDomain(apiResponse.data)
-                           emit(ApiResponse.Success(getElementResponse))
+                           emit(UiState.Success(getElementResponse))
                        }
                    }
                }
            }catch (e: Exception){
-               emit(ApiResponse.Error(e.message))
+               emit(UiState.Error(e.message.toString()))
            }
        }
     }
