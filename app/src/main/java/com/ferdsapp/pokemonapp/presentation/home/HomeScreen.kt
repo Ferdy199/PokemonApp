@@ -111,6 +111,7 @@ fun HomeScreenContent(
                                     label = pokemonType,
                                     onClick = {
                                         selected = pokemonType
+                                        viewModel.getAllPokemonCards(pokemonType)
                                     }
                                 )
                             }

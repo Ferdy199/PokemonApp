@@ -6,10 +6,8 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.dicoding.jetreward.ui.common.UiState
 import com.ferdsapp.home.di.RemotePagingFactory
-import com.ferdsapp.pokemonapp.data.model.pokemonCard.PokemonCardData
 import com.ferdsapp.pokemonapp.data.source.IRemoteDataSource
 import com.ferdsapp.pokemonapp.data.utils.ApiResponse
-import com.ferdsapp.pokemonapp.data.utils.DataMapper
 import com.ferdsapp.pokemonapp.data.utils.DataMapper.mapElementTypeResponsesToDomain
 import com.ferdsapp.pokemonapp.data.utils.DataMapper.mapPokemonCardDataToDomain
 import com.ferdsapp.pokemonapp.domain.model.ElementTypeEntity
@@ -49,15 +47,15 @@ class PokemonRepository @Inject constructor (
        }
     }
 
-    override suspend fun getAllPokemonCards(): Flow<PagingData<PokemonCardEntity>> {
+    override suspend fun getAllPokemonCards(q: String?): Flow<PagingData<PokemonCardEntity>> {
        return Pager(
            config = PagingConfig(
                pageSize = 8,
-               prefetchDistance = 2,
+               prefetchDistance = 5,
                enablePlaceholders = false
            ),
            pagingSourceFactory = {
-               remotePagingFactory.create()
+               remotePagingFactory.create(q)
            }
        ).flow
            .map { pagingData ->

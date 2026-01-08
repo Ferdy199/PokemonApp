@@ -10,7 +10,8 @@ import javax.inject.Singleton
 
 @Singleton
 class GetAllPokemonPagingSource @Inject constructor(
-    private val IRemoteDataSource: IRemoteDataSource
+    private val IRemoteDataSource: IRemoteDataSource,
+    private val q: String? = null
 ): PagingSource<Int, PokemonCardData>() {
     override fun getRefreshKey(state: PagingState<Int, PokemonCardData>): Int? {
         return state.anchorPosition?.let { position ->
@@ -22,7 +23,7 @@ class GetAllPokemonPagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonCardData> {
        return try {
            val page = params.key ?: 1
-           val response = IRemoteDataSource.getAllPokemonCards(page)
+           val response = IRemoteDataSource.getAllPokemonCards(page, q)
 
            LoadResult.Page(
                data = response.data,

@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface IPokemonRepository {
     suspend fun getElementType(): Flow<UiState<ElementTypeEntity>>
-    suspend fun getAllPokemonCards(): Flow<PagingData<PokemonCardEntity>>
+    suspend fun getAllPokemonCards(q: String? = null): Flow<PagingData<PokemonCardEntity>>
 }

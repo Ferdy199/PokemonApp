@@ -11,6 +11,9 @@ interface ApiService {
 
     @GET("v2/cards")
     suspend fun getAllPokemonCards(
+        @Query("q")
+        q: String? = null,
+
         @Query("page")
         page: Int? = 1,
 

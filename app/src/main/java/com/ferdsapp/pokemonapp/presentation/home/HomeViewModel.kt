@@ -32,6 +32,8 @@ class HomeViewModel @Inject constructor(private val pokemonUseCase: PokemonUseCa
 
     fun getElementType() {
         viewModelScope.launch {
+            _uiState.value = UiState.Loading
+
             pokemonUseCase.getElementType()
                 .catch {
                     _uiState.value = UiState.Error(it.message.toString())
@@ -52,9 +54,9 @@ class HomeViewModel @Inject constructor(private val pokemonUseCase: PokemonUseCa
         }
     }
 
-    fun getAllPokemonCards() {
+    fun getAllPokemonCards(q: String? = null) {
         viewModelScope.launch {
-            pokemonUseCase.getAllPokemonCards()
+            pokemonUseCase.getAllPokemonCards(q)
                 .cachedIn(viewModelScope)
                 .collect {
                     _getAllCardsUiState.value = it

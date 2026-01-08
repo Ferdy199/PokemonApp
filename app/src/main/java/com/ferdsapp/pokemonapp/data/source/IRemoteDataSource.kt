@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface IRemoteDataSource {
     suspend fun getElementType(): Flow<ApiResponse<ElementTypeResponses>>
-    suspend fun getAllPokemonCards(page: Int? = 1): PokemonCardResponse
+    suspend fun getAllPokemonCards(page: Int? = 1, q: String? = null): PokemonCardResponse
 }

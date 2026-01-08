@@ -14,7 +14,7 @@ class PokemonInteractor @Inject constructor(private val pokemonRepository: IPoke
         return pokemonRepository.getElementType()
     }
 
-    override suspend fun getAllPokemonCards(): Flow<PagingData<PokemonCardEntity>> {
-        return pokemonRepository.getAllPokemonCards()
+    override suspend fun getAllPokemonCards(q: String?): Flow<PagingData<PokemonCardEntity>> {
+        return pokemonRepository.getAllPokemonCards(q = q)
     }
 }

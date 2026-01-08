@@ -32,9 +32,19 @@ class RemoteDataSource @Inject constructor (private val apiService: ApiService):
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun getAllPokemonCards(page: Int?): PokemonCardResponse {
+    override suspend fun getAllPokemonCards(page: Int?, q: String?): PokemonCardResponse {
         return try {
-            val response = apiService.getAllPokemonCards(page = page ?: 1, pageSize = 8)
+            var query = q
+            if (query != null) {
+                if (query.lowercase().contains("all")){
+                    query = null
+                }
+            }
+
+            val response = apiService.getAllPokemonCards(
+                q = if (query.isNullOrEmpty()) null else "types:$query",
+                page = page ?: 1,
+                pageSize = 8)
             response
         }catch (e: Exception){
             throw e
