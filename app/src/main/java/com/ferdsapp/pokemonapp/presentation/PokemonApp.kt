@@ -18,12 +18,16 @@ import com.ferdsapp.pokemonapp.presentation.ui.theme.PokemonAppTheme
 fun PokemonApp(
     modifier: Modifier = Modifier
 ) {
-    PokemonAppContent()
+    PokemonAppContent(
+        modifier
+    )
 }
 
 @Composable
 fun PokemonAppContent(modifier: Modifier = Modifier) {
-    HomeScreen()
+    HomeScreen(
+        modifier = modifier
+    )
 }
 
 @Preview(showBackground = true)

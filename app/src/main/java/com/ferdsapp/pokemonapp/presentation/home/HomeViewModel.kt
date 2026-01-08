@@ -1,10 +1,12 @@
 package com.ferdsapp.pokemonapp.presentation.home
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.dicoding.jetreward.ui.common.UiState
 import com.ferdsapp.pokemonapp.domain.model.ElementTypeEntity
+import com.ferdsapp.pokemonapp.domain.model.PokemonCardEntity
 import com.ferdsapp.pokemonapp.domain.useCase.PokemonUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,11 +17,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val pokemonUseCase: PokemonUseCase): ViewModel() {
+
+    //get Type
     private val _uiState: MutableStateFlow<UiState<ElementTypeEntity>> = MutableStateFlow(UiState.Loading)
     val uiState: StateFlow<UiState<ElementTypeEntity>>
         get() = _uiState
 
-    fun getElementType(){
+    // get all cards
+    private val _getAllCardsUiState: MutableStateFlow<PagingData<PokemonCardEntity>> =
+        MutableStateFlow(PagingData.empty())
+
+    val getAllCardsUiState: StateFlow<PagingData<PokemonCardEntity>>
+        get() = _getAllCardsUiState
+
+    fun getElementType() {
         viewModelScope.launch {
             pokemonUseCase.getElementType()
                 .catch {
@@ -37,6 +48,16 @@ class HomeViewModel @Inject constructor(private val pokemonUseCase: PokemonUseCa
                             _uiState.value = UiState.Success(elementType.data)
                         }
                     }
+                }
+        }
+    }
+
+    fun getAllPokemonCards() {
+        viewModelScope.launch {
+            pokemonUseCase.getAllPokemonCards()
+                .cachedIn(viewModelScope)
+                .collect {
+                    _getAllCardsUiState.value = it
                 }
         }
     }
