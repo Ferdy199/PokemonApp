@@ -24,17 +24,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PokemonAppTheme {
-                Scaffold(
-                    topBar = {
-                        PokemonAppBar()
-                    },
-                    containerColor = Color(0xFFFFF7F3),
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    PokemonApp(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                PokemonApp()
             }
         }
     }

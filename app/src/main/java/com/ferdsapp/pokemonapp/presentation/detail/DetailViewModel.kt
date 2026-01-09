@@ -1,5 +1,6 @@
 package com.ferdsapp.pokemonapp.presentation.detail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.jetreward.ui.common.UiState
@@ -21,6 +22,7 @@ class DetailViewModel @Inject constructor( private val pokemonUseCase: PokemonUs
         get() = _uiState
 
     fun getPokemonDetailData(id: String) {
+        Log.d("DetailViewModel", "getPokemonDetailData: id $id")
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             pokemonUseCase.getPokemonDetailData(id)

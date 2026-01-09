@@ -32,7 +32,7 @@ object DataMapper {
             hp = input.hp,
             types = input.types,
             rules = input.rules,
-            images = input.images
+            images = input.images[0]
         )
     }
 }

@@ -16,5 +16,5 @@ data class PokemonDetailDataEntity (
 
     val rules: List<String> = listOf(),
 
-    val images: List<PokemonImagesSize> = listOf()
+    val images: PokemonImagesSize
 )

@@ -25,7 +25,7 @@ interface ApiService {
     ): PokemonCardResponse
 
     @GET("v2/cards/{id}")
-    fun getPokemonDetail(
+    suspend fun getPokemonDetail(
         @Path("id")
         id: String
     ): PokemonDetailResponses

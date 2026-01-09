@@ -70,6 +70,7 @@ class PokemonRepository @Inject constructor (
     }
 
     override fun getPokemonDetailData(id: String): Flow<UiState<PokemonDetailDataEntity>> {
+        Log.d("DetailRepo", "getPokemonDetailData: id $id")
         return flow {
             try {
                 pokemonDataSource.getPokemonDetailData(id).collect { detailResponse ->

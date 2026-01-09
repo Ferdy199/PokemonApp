@@ -39,7 +39,7 @@ class RemoteDataSource @Inject constructor (private val apiService: ApiService):
             Log.d("RemoteDataSource", "getAllPokemonCards type: $q")
             var query = q
             if (query != null) {
-                if (query.lowercase().contains("all")){
+                if (query.lowercase().contains("all") || query.lowercase().contains("null")){
                     query = null
                 }
             }
@@ -55,6 +55,7 @@ class RemoteDataSource @Inject constructor (private val apiService: ApiService):
     }
 
     override fun getPokemonDetailData(id: String): Flow<ApiResponse<PokemonDetailResponses>> {
+        Log.d("DetailSource", "getPokemonDetailData: id $id")
         return flow {
             try {
                 val apiResponse = apiService.getPokemonDetail(id)
