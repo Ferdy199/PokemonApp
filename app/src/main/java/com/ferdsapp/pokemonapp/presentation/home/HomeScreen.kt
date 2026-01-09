@@ -39,8 +39,10 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dicoding.jetreward.ui.common.UiState
 import com.ferdsapp.pokemonapp.presentation.component.PokemonCardItem
+import com.ferdsapp.pokemonapp.presentation.component.PokemonCardItemShimmer
 import com.ferdsapp.pokemonapp.presentation.component.PokemonSearchBar
 import com.ferdsapp.pokemonapp.presentation.component.PokemonTypeItem
+import com.ferdsapp.pokemonapp.presentation.component.PokemonTypeItemShimmer
 
 @Composable
 fun HomeScreen(
@@ -93,13 +95,13 @@ fun HomeScreenContent(
                         }
                     }
                     is UiState.Loading -> {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            CircularProgressIndicator()
+                            items(6) { i ->
+                                PokemonTypeItemShimmer(width = 48.dp)
+                            }
                         }
                     }
                     is UiState.Success -> {
@@ -147,13 +149,17 @@ fun HomeScreenContent(
                     }
                 }
                 is LoadState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.fillMaxSize()
+                            .padding(horizontal = 8.dp)
                     ) {
-                        CircularProgressIndicator()
+                        items(8) {
+                            PokemonCardItemShimmer()
+                        }
                     }
                 }
                 is LoadState.NotLoading -> Unit

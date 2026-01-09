@@ -21,6 +21,7 @@ material = "1.13.0"
 gson = "2.10.1"
 paging = "3.3.6"
 composeMaterial = "1.7.8"
+material3 = "1.4.0"
 
 
 [libraries]
@@ -54,6 +55,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterial" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 
 [plugins]

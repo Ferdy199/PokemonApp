@@ -73,6 +73,7 @@ dependencies {
     implementation (libs.gson)
     implementation (libs.converter.gson)
     implementation (libs.logging.interceptor)
+    implementation(libs.androidx.material3)
 
 //    Injection libs
     ksp (libs.hilt.android.compiler)
