@@ -2,7 +2,9 @@ package com.ferdsapp.pokemonapp.data.network
 
 import com.ferdsapp.pokemonapp.data.model.elementType.ElementTypeResponses
 import com.ferdsapp.pokemonapp.data.model.pokemonCard.PokemonCardResponse
+import com.ferdsapp.pokemonapp.data.model.pokemonDetail.PokemonDetailResponses
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -21,4 +23,10 @@ interface ApiService {
         pageSize: Int? = 1
 
     ): PokemonCardResponse
+
+    @GET("v2/cards/{id}")
+    fun getPokemonDetail(
+        @Path("id")
+        id: String
+    ): PokemonDetailResponses
 }

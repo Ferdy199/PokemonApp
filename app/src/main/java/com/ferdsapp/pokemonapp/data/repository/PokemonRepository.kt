@@ -1,5 +1,6 @@
 package com.ferdsapp.pokemonapp.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -10,8 +11,10 @@ import com.ferdsapp.pokemonapp.data.source.IRemoteDataSource
 import com.ferdsapp.pokemonapp.data.utils.ApiResponse
 import com.ferdsapp.pokemonapp.data.utils.DataMapper.mapElementTypeResponsesToDomain
 import com.ferdsapp.pokemonapp.data.utils.DataMapper.mapPokemonCardDataToDomain
+import com.ferdsapp.pokemonapp.data.utils.DataMapper.mapPokemonDetailDataToDomain
 import com.ferdsapp.pokemonapp.domain.model.ElementTypeEntity
 import com.ferdsapp.pokemonapp.domain.model.PokemonCardEntity
+import com.ferdsapp.pokemonapp.domain.model.PokemonDetailDataEntity
 import com.ferdsapp.pokemonapp.domain.repository.IPokemonRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -48,6 +51,7 @@ class PokemonRepository @Inject constructor (
     }
 
     override suspend fun getAllPokemonCards(q: String?): Flow<PagingData<PokemonCardEntity>> {
+        Log.d("Repository", "getAllPokemonCards type: $q")
        return Pager(
            config = PagingConfig(
                pageSize = 8,
@@ -63,5 +67,29 @@ class PokemonRepository @Inject constructor (
                    data.mapPokemonCardDataToDomain(data)
                }
            }
+    }
+
+    override fun getPokemonDetailData(id: String): Flow<UiState<PokemonDetailDataEntity>> {
+        return flow {
+            try {
+                pokemonDataSource.getPokemonDetailData(id).collect { detailResponse ->
+                    when(detailResponse){
+                        is ApiResponse.Error -> emit(UiState.Error(detailResponse.message.toString()))
+                        is ApiResponse.Loading -> emit(UiState.Loading)
+                        is ApiResponse.Success -> {
+                            val responseDetail = detailResponse.data.data
+                            val mapDetailResponse = responseDetail?.mapPokemonDetailDataToDomain(responseDetail)
+                            if (mapDetailResponse != null){
+                                emit(UiState.Success(mapDetailResponse))
+                            }else{
+                                emit(UiState.Error("Failed Get Detail"))
+                            }
+                        }
+                    }
+                }
+            }catch (e: Exception){
+                emit(UiState.Error(e.message.toString()))
+            }
+        }
     }
 }

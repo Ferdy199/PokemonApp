@@ -1,5 +1,6 @@
 package com.ferdsapp.pokemonapp.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ferdsapp.pokemonapp.data.model.pokemonCard.PokemonCardData
@@ -21,6 +22,7 @@ class GetAllPokemonPagingSource @Inject constructor(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonCardData> {
+        Log.d("PagingSource", "getAllPokemonCards type: $q")
        return try {
            val page = params.key ?: 1
            val response = IRemoteDataSource.getAllPokemonCards(page, q)

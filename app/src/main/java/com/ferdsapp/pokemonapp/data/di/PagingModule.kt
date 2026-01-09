@@ -16,7 +16,5 @@ object PagingModule {
     @Singleton
     fun providePagingFactory(
         remoteDataSource: RemoteDataSource
-    ): RemotePagingFactory = RemotePagingFactory{
-        GetAllPokemonPagingSource(remoteDataSource)
-    }
+    ): RemotePagingFactory = RemotePagingFactory(remoteDataSource = remoteDataSource)
 }

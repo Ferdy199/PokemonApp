@@ -1,5 +1,6 @@
 package com.ferdsapp.pokemonapp.presentation.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,16 +45,20 @@ import com.ferdsapp.pokemonapp.presentation.component.PokemonTypeItem
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToDetail: (String) -> Unit
 ) {
-    HomeScreenContent(viewModel, modifier = modifier)
+    HomeScreenContent(viewModel, navigateToDetail, modifier = modifier)
 }
 
 @Composable
 fun HomeScreenContent(
     viewModel: HomeViewModel,
+    navigateToDetail: (String) -> Unit,
     modifier: Modifier
 ) {
+    val query by viewModel.query.collectAsState()
+
     LaunchedEffect(Unit) {
         viewModel.getElementType()
         viewModel.getAllPokemonCards()
@@ -65,10 +70,16 @@ fun HomeScreenContent(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            PokemonSearchBar()
+            PokemonSearchBar(
+                query = query,
+                onQueryChange = {
+                    viewModel.onQueryChanged(it)
+                },
+                onSearch = {
+                    viewModel.searchNow(it)
+                },
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            val getAllPokemonState = viewModel.getAllCardsUiState.collectAsLazyPagingItems()
-
             viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
                 when(uiState) {
                     is UiState.Error -> {
@@ -111,7 +122,7 @@ fun HomeScreenContent(
                                     label = pokemonType,
                                     onClick = {
                                         selected = pokemonType
-                                        viewModel.getAllPokemonCards(pokemonType)
+                                        viewModel.getAllPokemonCards("types:$pokemonType")
                                     }
                                 )
                             }
@@ -120,7 +131,11 @@ fun HomeScreenContent(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            when(val state = getAllPokemonState.loadState.refresh){
+            val getAllPokemonState = viewModel.getAllCardsUiState.collectAsLazyPagingItems()
+            val searchState = viewModel.searchState.collectAsLazyPagingItems()
+            val pagingItems = if (query.isBlank()) getAllPokemonState else searchState
+
+            when(pagingItems.loadState.refresh){
                 is LoadState.Error -> {
                     Button(
                         onClick = { getAllPokemonState.retry() },
@@ -152,24 +167,27 @@ fun HomeScreenContent(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(
-                    count = getAllPokemonState.itemCount,
+                    count = pagingItems.itemCount,
                     key = { index ->
-                        val item = getAllPokemonState[index]
+                        val item = pagingItems[index]
                         "${item?.id ?: "null"}-$index"
                     }
                 ){ index ->
-                    val pokemonData = getAllPokemonState[index] ?: return@items
+                    val pokemonData = pagingItems[index] ?: return@items
                     PokemonCardItem(
-                        imageUrl = pokemonData.images.smallUrl ?: pokemonData.images.largeUrl ?: ""
+                        imageUrl = pokemonData.images.smallUrl ?: pokemonData.images.largeUrl ?: "",
+                        modifier = Modifier.clickable{
+                            navigateToDetail(pokemonData.id)
+                        }
                     )
                 }
 
                 item(span = {GridItemSpan(2)}) {
-                    val append = getAllPokemonState.loadState.append
+                    val append = pagingItems.loadState.append
                     when(append){
                         is LoadState.Error -> {
                             Button(
-                                onClick = { getAllPokemonState.retry() },
+                                onClick = { pagingItems.retry() },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)
@@ -193,12 +211,4 @@ fun HomeScreenContent(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun HomeScreenPreview() {
-    HomeScreenContent(
-        viewModel = hiltViewModel(), modifier = Modifier
-    )
 }

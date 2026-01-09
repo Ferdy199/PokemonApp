@@ -18,13 +18,18 @@ import com.ferdsapp.pokemonapp.presentation.ui.theme.PokemonAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PokemonSearchBar(modifier: Modifier = Modifier) {
+fun PokemonSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     SearchBar(
         inputField = {
             SearchBarDefaults.InputField(
-                query = "",
-                onQueryChange = {},
-                onSearch = {},
+                query = query,
+                onQueryChange = onQueryChange,
+                onSearch = onSearch,
                 expanded = false,
                 onExpandedChange = {},
                 leadingIcon = {
@@ -46,12 +51,4 @@ fun PokemonSearchBar(modifier: Modifier = Modifier) {
         modifier = modifier.padding(8.dp)
             .fillMaxWidth(),
     ){}
-}
-
-@Preview
-@Composable
-private fun SearchBarPreview() {
-    PokemonAppTheme {
-        PokemonSearchBar()
-    }
 }
